@@ -1,0 +1,52 @@
+apply plugin: 'com.android.application'
+
+android {
+  signingConfigs {
+    config {
+      keyAlias 'keys'
+      keyPassword 'keystore'
+      storeFile file('/Users/harshikesh.kumar/Documents/udacity/jokes/keystore.jks')
+      storePassword 'keystore'
+    }
+  }
+  compileSdkVersion 24
+  buildToolsVersion "24.0.2"
+  defaultConfig {
+    applicationId "com.jokes.onlinejokes"
+    minSdkVersion 19
+    targetSdkVersion 24
+    versionCode 1
+    versionName "1.0"
+
+  }
+  buildTypes {
+    release {
+      minifyEnabled true
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+    debug {
+      minifyEnabled false
+    }
+  }
+
+  productFlavors {
+    free {
+      applicationId "com.jokes.onlinejokes.free"
+    }
+    paid {
+      applicationId "com.jokes.onlinejokes.paid"
+    }
+  }
+}
+
+dependencies {
+  compile fileTree(include: ['*.jar'], dir: 'libs')
+  compile project(':joker')
+  compile project(':jokeandroidlibrary')
+  compile project(path: ':backend', configuration: 'android-endpoints')
+  testCompile 'junit:junit:4.12'
+  freeCompile 'com.google.firebase:firebase-ads:9.6.1'
+  compile 'com.android.support:appcompat-v7:24.2.0'
+  compile 'com.android.support:design:24.2.1'
+  compile project(path: ':backend', configuration: 'android-endpoints')
+}

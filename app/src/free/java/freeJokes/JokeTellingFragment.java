@@ -2,26 +2,25 @@ package freeJokes;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import com.example.Joker;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.jokes.jokeandroidlibrary.Constants;
 import com.jokes.jokeandroidlibrary.JokeShowActivity;
-import com.jokes.onlinejokes.DataManager;
-import com.jokes.onlinejokes.Manifest;
 import com.jokes.onlinejokes.R;
+import com.jokes.onlinejokes.network.DataManager;
+import com.jokes.onlinejokes.network.NetworkBackgroundTask;
+import com.jokes.onlinejokes.utility.Utils;
 
 /**
  * Created by harshikesh.kumar on 18/10/16.
@@ -30,33 +29,43 @@ public class JokeTellingFragment extends Fragment
     implements NetworkBackgroundTask.OnServerResponse {
 
   private static final String TAG = JokeTellingFragment.class.getSimpleName();
-  InterstitialAd mInterstitialAd;
+  private InterstitialAd mInterstitialAd;
   private FloatingActionButton jokeButton;
   private Context mContext;
   private String mJoke;
+  private ProgressBar mProgressBar;
+  public boolean adremoved;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     View root = inflater.inflate(R.layout.fragment_joke, container, false);
     jokeButton = (FloatingActionButton) root.findViewById(R.id.jokeButton);
+    mProgressBar = (ProgressBar) root.findViewById(R.id.progressBar);
     jokeButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        requestNewInterstitial();
-        DataManager.getInstance()
-            .getJokesFromServer(JokeTellingFragment.this, getActivity(), Constants.FREE_JOKE_ID);
+        if (Utils.isConnectedToNetwork(getActivity())) {
+          mProgressBar.setVisibility(View.VISIBLE);
+          requestNewInterstitial();
+          DataManager.getInstance()
+              .getJokesFromServer(JokeTellingFragment.this, getActivity(), Constants.FREE_JOKE_ID);
+        } else {
+          showJoke(new Joker().getOfflinejokes());
+        }
       }
     });
     mInterstitialAd = new InterstitialAd(getActivity());
-    mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+    mInterstitialAd.setAdUnitId(getActivity().getResources().getString(R.string.adUnitId));
 
     mInterstitialAd.setAdListener(new AdListener() {
+
       @Override public void onAdLoaded() {
         super.onAdLoaded();
         showInterstitial();
       }
 
       @Override public void onAdClosed() {
-        showJoke();
+        adremoved = true;
+        showJoke(mJoke);
       }
     });
     requestNewInterstitial();
@@ -69,14 +78,15 @@ public class JokeTellingFragment extends Fragment
     mContext = context;
   }
 
-  private void showJoke() {
-    if (!isAdded()) {
+  private void showJoke(String joke) {
+    if (!isAdded() || !adremoved) {
       return;
     }
     Intent intent = new Intent(mContext, JokeShowActivity.class);
-    intent.putExtra(Constants.JOKE_ID, mJoke);
+    intent.putExtra(Constants.JOKE_ID, joke);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     mContext.startActivity(intent);
+    adremoved = false;
   }
 
   private void requestNewInterstitial() {
@@ -87,14 +97,16 @@ public class JokeTellingFragment extends Fragment
     AdRequest adRequest = new AdRequest.Builder().addTestDevice(deviceId).build();
     mInterstitialAd.loadAd(adRequest);
   }
+
   private void showInterstitial() {
     if (mInterstitialAd.isLoaded()) {
       mInterstitialAd.show();
     }
   }
 
-
   @Override public void onDataRecieved(String res) {
+    mProgressBar.setVisibility(View.GONE);
     mJoke = res;
+    showJoke(res);
   }
 }

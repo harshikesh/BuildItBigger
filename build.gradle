@@ -18,6 +18,22 @@ allprojects {
   }
 }
 
+task runFunctionalTest(dependsOn:[':backend:appengineRun', ':app:connectedAndroidTest',
+                                  ':backend:appengineStop']) {
+  tasks.getByPath(":app:connectedAndroidTest").mustRunAfter tasks.getByPath(":backend:appengineRun")
+  tasks.getByPath(":backend:appengineStop").mustRunAfter tasks.getByPath(":app:connectedAndroidTest")
+
+  evaluationDependsOn ':backend'
+
+  project(":backend") {
+    appengine {
+      daemon true
+    }
+  }
+}
+
+
 task clean(type: Delete) {
   delete rootProject.buildDir
 }
+

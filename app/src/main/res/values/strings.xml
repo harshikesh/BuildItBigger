@@ -1,5 +1,7 @@
 <resources>
   <string name="app_name">OnlineJokes</string>
-  <string name="joke_endpoint" translatable="false">http://iron-entropy-146816.appspot.com/_ah/api/</string>
-  <!--<string name="joke_endpoint" translatable="false">http://192.168.0.102:8080/_ah/api/</string>-->
+  <!--<string name="joke_endpoint" translatable="false">http://iron-entropy-146816.appspot.com/_ah/api/</string>-->
+  <string name="get_joke">Tell me a joke</string>
+  <string name="joke_endpoint" translatable="false">http://192.168.0.102:8080/_ah/api/</string>
+  <string name="adUnitId">ca-app-pub-3940256099942544/1033173712</string>
 </resources>

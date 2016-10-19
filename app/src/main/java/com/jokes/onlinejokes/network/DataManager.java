@@ -1,4 +1,4 @@
-package com.jokes.onlinejokes;
+package com.jokes.onlinejokes.network;
 
 import android.content.Context;
 import android.util.Pair;

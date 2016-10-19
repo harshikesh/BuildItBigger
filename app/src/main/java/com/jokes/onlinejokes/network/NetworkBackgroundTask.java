@@ -1,4 +1,4 @@
-package com.jokes.onlinejokes;
+package com.jokes.onlinejokes.network;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -9,6 +9,7 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
+import com.jokes.onlinejokes.R;
 import java.io.IOException;
 
 /**
@@ -32,7 +33,8 @@ public class NetworkBackgroundTask extends AsyncTask<Pair<Context, String>, Void
     if (myApiService == null) {  // Only do this once
       MyApi.Builder builder =
           new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(),
-              null).setRootUrl(context.getResources().getString(R.string.joke_endpoint)).setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+              null).setRootUrl(context.getResources().getString(
+              R.string.joke_endpoint)).setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
         @Override
         public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws
             IOException {

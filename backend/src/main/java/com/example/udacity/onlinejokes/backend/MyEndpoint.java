@@ -6,10 +6,10 @@
 
 package com.example.udacity.onlinejokes.backend;
 
+import com.example.Joker;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
-import java.util.Random;
 import javax.inject.Named;
 
 /** An endpoint class we are exposing */
@@ -24,30 +24,14 @@ import javax.inject.Named;
   public static final String FREE_JOKE_ID = "freeJoke";
   public static final String PAID_JOKE_ID = "paidJoke";
 
-  String[] jokes = {
-      "\n"
-          + "What is the difference between a snowman and a snowwoman?\n"
-          + "-\n"
-          + "Snowballs.\n"
-          + "\n",
-      "Why is it a bad idea for two butt cheeks to get married? Because they part for every little shit.\n"
-          + "\n", "Police officer: \"Can you identify yourself, sir?\"\n"
-      + " \n"
-      + "Driver pulls out his mirror and says: \"Yes, it's me.\"\n"
-      + "\n"
-      + "\n"
-  };
-
   /** A simple endpoint method that takes a name and says Hi back */
   @ApiMethod(name = "sayHi") public MyBean sayHi(@Named("name") String name) {
-    System.out.println("sayHi : "+name);
+    System.out.println("sayHi : " + name);
     MyBean response = new MyBean();
-    Random random = new Random();
     if (name.equalsIgnoreCase(PAID_JOKE_ID)) {
-      int val = random.nextInt(2);
-      response.setData(jokes[val]);
+      response.setData(new Joker().tellaJoke());
     } else {
-      response.setData(jokes[0]);
+      response.setData(new Joker().tellaJoke());
     }
 
     return response;

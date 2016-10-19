@@ -34,7 +34,7 @@ public class ApplicationTest {
 
   @Test
   public void retrieveJokeOnClick() {
-    onView(withId(com.jokes.jokeandroidlibrary.R.id.jokeButton)).perform(click());
+    onView(withId(com.jokes.onlinejokes.R.id.jokeButton)).perform(click());
     intended(hasComponent(hasClassName(Joker.class.getName())));
     intended(hasExtra(equalTo(Intent.EXTRA_TEXT), notNullValue()));
   }

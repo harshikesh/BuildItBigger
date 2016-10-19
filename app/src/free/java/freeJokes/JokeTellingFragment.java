@@ -35,6 +35,7 @@ public class JokeTellingFragment extends Fragment
   private String mJoke;
   private ProgressBar mProgressBar;
   public boolean adremoved;
+  private boolean mJokeRecieved;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -67,9 +68,13 @@ public class JokeTellingFragment extends Fragment
         adremoved = true;
         showJoke(mJoke);
       }
-    });
-    requestNewInterstitial();
 
+      @Override public void onAdFailedToLoad(int i) {
+        super.onAdFailedToLoad(i);
+        adremoved = true;
+        showJoke(mJoke);
+      }
+    });
     return root;
   }
 
@@ -79,7 +84,7 @@ public class JokeTellingFragment extends Fragment
   }
 
   private void showJoke(String joke) {
-    if (!isAdded() || !adremoved) {
+    if ((!isAdded() || !adremoved || !mJokeRecieved) && Utils.isConnectedToNetwork(getActivity())) {
       return;
     }
     Intent intent = new Intent(mContext, JokeShowActivity.class);
@@ -87,6 +92,7 @@ public class JokeTellingFragment extends Fragment
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     mContext.startActivity(intent);
     adremoved = false;
+    mJokeRecieved = false;
   }
 
   private void requestNewInterstitial() {
@@ -106,6 +112,7 @@ public class JokeTellingFragment extends Fragment
 
   @Override public void onDataRecieved(String res) {
     mProgressBar.setVisibility(View.GONE);
+    mJokeRecieved = true;
     mJoke = res;
     showJoke(res);
   }

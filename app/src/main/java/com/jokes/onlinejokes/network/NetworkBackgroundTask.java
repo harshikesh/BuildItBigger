@@ -30,17 +30,11 @@ public class NetworkBackgroundTask extends AsyncTask<Pair<Context, String>, Void
   }
 
   @Override protected String doInBackground(Pair<Context, String>... params) {
-    if (myApiService == null) {  // Only do this once
+    if (myApiService == null) {
       MyApi.Builder builder =
           new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(),
               null).setRootUrl(context.getResources().getString(
-              R.string.joke_endpoint)).setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-        @Override
-        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws
-            IOException {
-          abstractGoogleClientRequest.setDisableGZipContent(true);
-        }
-      });
+              R.string.joke_endpoint));
       myApiService = builder.build();
     }
 

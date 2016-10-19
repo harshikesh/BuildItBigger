@@ -23,9 +23,7 @@ public class Joker {
   };
 
   public String getOfflinejokes() {
-    Random random = new Random();
-    int val = random.nextInt(2);
-    return jokes[val];
+    return jokes[0];
   }
 
   public String tellaJoke() {

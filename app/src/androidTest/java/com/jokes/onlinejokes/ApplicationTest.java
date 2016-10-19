@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.test.ApplicationTestCase;
 import com.example.Joker;
+import com.jokes.jokeandroidlibrary.JokeShowActivity;
 import com.jokes.onlinejokes.ui.MainActivity;
 import android.content.Intent;
 import org.junit.Rule;
@@ -35,7 +36,7 @@ public class ApplicationTest {
   @Test
   public void retrieveJokeOnClick() {
     onView(withId(com.jokes.onlinejokes.R.id.jokeButton)).perform(click());
-    intended(hasComponent(hasClassName(Joker.class.getName())));
+    intended(hasComponent(hasClassName(JokeShowActivity.class.getName())));
     intended(hasExtra(equalTo(Intent.EXTRA_TEXT), notNullValue()));
   }
 }
